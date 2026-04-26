@@ -5,107 +5,461 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>银发AI助手 - 您的贴心智能伙伴</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap');
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
+
   :root {
-    --warm-bg: #FDF8F3; --warm-surface: #FAF3EB; --warm-card: #FFFCF8;
-    --warm-orange: #E8845A; --warm-orange-light: #F5D5C3; --warm-orange-deep: #C05A30;
-    --warm-brown: #8B5A3C; --warm-cream: #F7EDE0;
-    --warm-gold: #D4952A; --warm-gold-light: #F5E4C0;
-    --text-dark: #3D2B1A; --text-mid: #6B4830; --text-muted: #9B7A64;
-    --border-warm: #E8D4BE; --border-light: #F0E4D4;
-    --shadow-card: 0 2px 12px rgba(139,90,60,0.08);
-    --radius-lg: 20px; --radius-md: 14px; --radius-sm: 10px;
+    --ink: #1A0A00;
+    --ink-mid: #3D1A00;
+    --ink-muted: #7A4A30;
+    --ink-light: #B07A5A;
+    --red: #C0392B;
+    --red-deep: #96261E;
+    --red-light: #F5D5CF;
+    --red-pale: #FDF0EE;
+    --gold: #C9821A;
+    --gold-light: #F5E4C0;
+    --paper: #FBF6EF;
+    --paper-dark: #F4EDE2;
+    --paper-card: #FDFAF6;
+    --border: #E0C9B0;
+    --border-light: #EDE0D0;
+    --shadow: 0 4px 24px rgba(26,10,0,0.10);
+    --shadow-sm: 0 2px 10px rgba(26,10,0,0.07);
+    --r-lg: 16px; --r-md: 12px; --r-sm: 8px;
   }
-  body { font-family: "PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif; background: var(--warm-bg); color: var(--text-dark); min-height: 100vh; font-size: 17px; line-height: 1.7; }
-  .header { background: var(--warm-card); border-bottom: 2px solid var(--border-warm); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+
+  body {
+    font-family: "PingFang SC","Noto Serif SC","STSong","SimSun",serif;
+    background: var(--paper);
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(192,57,43,0.04) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 100%, rgba(201,130,26,0.05) 0%, transparent 60%);
+    color: var(--ink);
+    min-height: 100vh;
+    font-size: 17px;
+    line-height: 1.8;
+  }
+
+  /* Header */
+  .header {
+    background: var(--ink);
+    background-image: linear-gradient(135deg, #1A0A00 0%, #3D1A00 100%);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 20px rgba(26,10,0,0.3);
+  }
+
   .logo { display: flex; align-items: center; gap: 12px; }
-  .logo-icon { width: 46px; height: 46px; background: linear-gradient(135deg,var(--warm-orange),var(--warm-gold)); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
-  .logo-text { font-size: 20px; font-weight: 700; color: var(--warm-brown); letter-spacing: 1px; }
-  .logo-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-  .time-display { font-size: 13px; color: var(--text-muted); text-align: right; }
-  .nav { background: var(--warm-surface); padding: 0 8px; display: flex; border-bottom: 1px solid var(--border-warm); overflow-x: auto; }
-  .nav-btn { padding: 14px 14px; border: none; background: transparent; color: var(--text-muted); font-size: 15px; font-weight: 500; cursor: pointer; border-bottom: 3px solid transparent; display: flex; align-items: center; gap: 5px; font-family: inherit; white-space: nowrap; flex-shrink: 0; }
-  .nav-btn.active { color: var(--warm-orange-deep); border-bottom-color: var(--warm-orange); font-weight: 600; }
-  .main { padding: 18px 14px; max-width: 680px; margin: 0 auto; }
+
+  .logo-icon {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--red), #8B1A10);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 2px 8px rgba(192,57,43,0.4);
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .logo-text {
+    font-size: 20px;
+    font-weight: 700;
+    color: #F5E4C0;
+    letter-spacing: 3px;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  }
+
+  .logo-sub { font-size: 11px; color: rgba(245,228,192,0.6); margin-top: 2px; letter-spacing: 1px; }
+
+  .time-display { font-size: 12px; color: rgba(245,228,192,0.7); text-align: right; }
+  #currentTime { font-size: 17px; font-weight: 600; color: #F5E4C0; }
+
+  /* Nav */
+  .nav {
+    background: var(--paper-dark);
+    padding: 0 8px;
+    display: flex;
+    border-bottom: 2px solid var(--border);
+    overflow-x: auto;
+    gap: 2px;
+  }
+
+  .nav-btn {
+    padding: 13px 16px;
+    border: none;
+    background: transparent;
+    color: var(--ink-muted);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    display: flex; align-items: center; gap: 5px;
+    font-family: inherit;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+
+  .nav-btn:hover { color: var(--red); }
+  .nav-btn.active { color: var(--red-deep); border-bottom-color: var(--red); font-weight: 600; }
+
+  /* Main */
+  .main { padding: 20px 16px; max-width: 700px; margin: 0 auto; }
   .page { display: none; } .page.active { display: block; }
-  .card { background: var(--warm-card); border: 1.5px solid var(--border-warm); border-radius: var(--radius-lg); padding: 20px 18px; margin-bottom: 18px; box-shadow: var(--shadow-card); }
-  .card-title { font-size: 19px; font-weight: 700; color: var(--warm-brown); margin-bottom: 8px; }
-  .card-desc { font-size: 15px; color: var(--text-muted); margin-bottom: 18px; line-height: 1.7; }
-  .hero { background: linear-gradient(135deg,#FDF1E7,#FAE8D4,#F5DEC4); border: 2px solid var(--warm-orange-light); border-radius: var(--radius-lg); padding: 28px 20px; margin-bottom: 18px; text-align: center; }
-  .hero-emoji { font-size: 48px; margin-bottom: 12px; display: block; }
-  .hero-title { font-size: 24px; font-weight: 700; color: var(--warm-brown); margin-bottom: 10px; }
-  .hero-sub { font-size: 16px; color: var(--text-mid); line-height: 1.8; }
-  .feature-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-top: 18px; }
-  .feature-card { background: var(--warm-card); border: 2px solid var(--border-warm); border-radius: var(--radius-lg); padding: 18px 10px; text-align: center; cursor: pointer; transition: all 0.2s; }
-  .feature-card:hover { border-color: var(--warm-orange); transform: translateY(-2px); }
-  .feature-icon { font-size: 34px; margin-bottom: 8px; display: block; }
-  .feature-title { font-size: 15px; font-weight: 700; color: var(--warm-brown); margin-bottom: 5px; }
-  .feature-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
-  .stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 18px; }
-  .stat-card { background: var(--warm-card); border: 1.5px solid var(--border-warm); border-radius: var(--radius-md); padding: 14px; text-align: center; }
-  .stat-num { font-size: 26px; font-weight: 700; color: var(--warm-orange); display: block; }
-  .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+
+  /* Cards */
+  .card {
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 22px 20px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: linear-gradient(180deg, var(--red), var(--gold));
+    border-radius: 3px 0 0 3px;
+  }
+
+  .card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink-mid);
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+
+  .card-desc { font-size: 15px; color: var(--ink-muted); margin-bottom: 18px; line-height: 1.8; }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, var(--ink) 0%, #3D1A00 100%);
+    border-radius: var(--r-lg);
+    padding: 32px 24px;
+    margin-bottom: 18px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+
+  .hero::before {
+    content: '壽';
+    position: absolute;
+    font-size: 200px;
+    color: rgba(255,255,255,0.03);
+    right: -20px;
+    top: -40px;
+    font-weight: 700;
+    pointer-events: none;
+  }
+
+  .hero-emoji { font-size: 48px; margin-bottom: 12px; display: block; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3)); }
+  .hero-title { font-size: 26px; font-weight: 700; color: #F5E4C0; margin-bottom: 10px; letter-spacing: 3px; text-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+  .hero-sub { font-size: 15px; color: rgba(245,228,192,0.75); line-height: 1.9; letter-spacing: 1px; }
+
+  /* Stats */
+  .stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 18px; }
+  .stat-card {
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    padding: 16px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .stat-num { font-size: 28px; font-weight: 700; color: var(--red); display: block; }
+  .stat-label { font-size: 12px; color: var(--ink-muted); margin-top: 4px; letter-spacing: 1px; }
+
+  /* Feature grid */
+  .feature-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 18px; }
+  .feature-card {
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 20px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s;
+    box-shadow: var(--shadow-sm);
+  }
+  .feature-card:hover {
+    border-color: var(--red);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(192,57,43,0.15);
+  }
+  .feature-icon { font-size: 34px; margin-bottom: 10px; display: block; }
+  .feature-title { font-size: 15px; font-weight: 700; color: var(--ink-mid); margin-bottom: 5px; letter-spacing: 1px; }
+  .feature-desc { font-size: 12px; color: var(--ink-muted); line-height: 1.6; }
+
+  /* Lessons */
   .lesson-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .lesson-card { background: var(--warm-card); border: 2px solid var(--border-light); border-radius: var(--radius-md); padding: 16px; cursor: pointer; transition: all 0.2s; }
-  .lesson-card:hover { border-color: var(--warm-gold); }
-  .lesson-badge { display: inline-flex; align-items: center; background: var(--warm-gold-light); color: var(--warm-brown); font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; margin-bottom: 8px; }
-  .lesson-title { font-size: 15px; font-weight: 600; color: var(--text-dark); margin-bottom: 5px; }
-  .lesson-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
-  .lesson-status { margin-top: 10px; display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); }
-  .progress-bar { flex: 1; height: 5px; background: var(--border-warm); border-radius: 3px; overflow: hidden; }
-  .progress-fill { height: 100%; background: var(--warm-orange); border-radius: 3px; }
-  .chat-container { background: var(--warm-surface); border: 1.5px solid var(--border-warm); border-radius: var(--radius-lg); overflow: hidden; }
-  .chat-header { background: var(--warm-orange-light); padding: 12px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border-warm); }
-  .ai-avatar { width: 38px; height: 38px; background: var(--warm-orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-  .ai-name { font-size: 15px; font-weight: 600; color: var(--warm-brown); }
-  .ai-status { font-size: 12px; color: var(--text-muted); }
-  .chat-messages { padding: 16px; min-height: 200px; max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-  .msg { max-width: 82%; padding: 11px 15px; border-radius: 18px; font-size: 16px; line-height: 1.7; }
-  .msg-ai { background: var(--warm-card); border: 1.5px solid var(--border-warm); border-bottom-left-radius: 5px; align-self: flex-start; color: var(--text-dark); }
-  .msg-user { background: var(--warm-orange); color: white; border-bottom-right-radius: 5px; align-self: flex-end; }
-  .chat-input-area { padding: 12px 14px; border-top: 1px solid var(--border-warm); display: flex; gap: 8px; background: var(--warm-card); }
-  .chat-input { flex: 1; padding: 11px 14px; border: 2px solid var(--border-warm); border-radius: var(--radius-sm); font-size: 16px; color: var(--text-dark); background: var(--warm-bg); font-family: inherit; outline: none; }
-  .chat-input:focus { border-color: var(--warm-orange); }
-  .chat-send { padding: 11px 18px; background: var(--warm-orange); color: white; border: none; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; }
-  .chat-send:disabled { background: #D4A88A; cursor: wait; }
+  .lesson-card {
+    background: var(--paper-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--r-md);
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .lesson-card:hover { border-color: var(--gold); box-shadow: var(--shadow-sm); }
+  .lesson-badge {
+    display: inline-flex; align-items: center;
+    background: var(--gold-light); color: var(--ink-mid);
+    font-size: 11px; font-weight: 600;
+    padding: 4px 10px; border-radius: 20px; margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+  .lesson-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 5px; letter-spacing: 1px; }
+  .lesson-desc { font-size: 13px; color: var(--ink-muted); line-height: 1.6; }
+  .lesson-status { margin-top: 10px; display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-muted); }
+  .progress-bar { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--red), var(--gold)); border-radius: 2px; }
+
+  /* Chat */
+  .chat-container {
+    background: var(--paper-dark);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+  }
+  .chat-header {
+    background: linear-gradient(135deg, var(--ink-mid), var(--ink));
+    padding: 12px 18px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .ai-avatar {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, var(--red), #8B1A10);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+    border: 2px solid rgba(245,228,192,0.3);
+  }
+  .ai-name { font-size: 15px; font-weight: 600; color: #F5E4C0; letter-spacing: 1px; }
+  .ai-status { font-size: 11px; color: rgba(245,228,192,0.6); }
+
+  .chat-messages {
+    padding: 18px; min-height: 200px; max-height: 300px;
+    overflow-y: auto; display: flex; flex-direction: column; gap: 14px;
+  }
+
+  .msg { max-width: 82%; padding: 12px 16px; border-radius: 16px; font-size: 16px; line-height: 1.8; }
+  .msg-ai {
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 4px;
+    align-self: flex-start; color: var(--ink);
+  }
+  .msg-user {
+    background: linear-gradient(135deg, var(--red), var(--red-deep));
+    color: white;
+    border-bottom-right-radius: 4px;
+    align-self: flex-end;
+    box-shadow: 0 2px 8px rgba(192,57,43,0.3);
+  }
+
+  .chat-input-area {
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    display: flex; gap: 8px;
+    background: var(--paper-card);
+  }
+  .chat-input {
+    flex: 1; padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-sm);
+    font-size: 16px; color: var(--ink);
+    background: var(--paper); font-family: inherit; outline: none;
+    transition: border-color 0.2s;
+  }
+  .chat-input:focus { border-color: var(--red); }
+  .chat-send {
+    padding: 11px 20px;
+    background: linear-gradient(135deg, var(--red), var(--red-deep));
+    color: white; border: none;
+    border-radius: var(--r-sm);
+    font-size: 15px; font-weight: 600;
+    cursor: pointer; font-family: inherit;
+    box-shadow: 0 2px 8px rgba(192,57,43,0.3);
+    letter-spacing: 1px;
+  }
+  .chat-send:disabled { background: var(--ink-light); cursor: wait; box-shadow: none; }
+
   .quick-qs { padding: 0 16px 12px; display: flex; flex-wrap: wrap; gap: 7px; }
-  .quick-q { padding: 8px 14px; background: var(--warm-cream); border: 1.5px solid var(--border-warm); border-radius: 20px; font-size: 14px; color: var(--warm-brown); cursor: pointer; font-family: inherit; }
-  .quick-q:hover { background: var(--warm-orange-light); border-color: var(--warm-orange); }
+  .quick-q {
+    padding: 8px 14px;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 14px; color: var(--ink-mid);
+    cursor: pointer; font-family: inherit;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+  }
+  .quick-q:hover { background: var(--red-pale); border-color: var(--red); color: var(--red); }
+
+  /* Memory */
   .memory-list { display: flex; flex-direction: column; gap: 12px; }
-  .memory-item { background: var(--warm-card); border: 1.5px solid var(--border-light); border-radius: var(--radius-md); padding: 16px 18px; display: flex; gap: 14px; cursor: pointer; transition: all 0.2s; }
-  .memory-item:hover { border-color: var(--warm-orange); }
-  .memory-date { background: var(--warm-gold-light); color: var(--warm-brown); font-size: 12px; font-weight: 600; padding: 7px 10px; border-radius: var(--radius-sm); text-align: center; min-width: 60px; flex-shrink: 0; }
-  .memory-title { font-size: 16px; font-weight: 600; color: var(--text-dark); margin-bottom: 4px; }
-  .memory-preview { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+  .memory-item {
+    background: var(--paper-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--r-md);
+    padding: 16px 18px;
+    display: flex; gap: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .memory-item:hover { border-color: var(--red); box-shadow: var(--shadow-sm); }
+  .memory-date {
+    background: linear-gradient(135deg, var(--red), var(--red-deep));
+    color: white;
+    font-size: 12px; font-weight: 600;
+    padding: 8px 10px; border-radius: var(--r-sm);
+    text-align: center; min-width: 58px; flex-shrink: 0;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 6px rgba(192,57,43,0.25);
+  }
+  .memory-title { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 4px; letter-spacing: 0.5px; }
+  .memory-preview { font-size: 13px; color: var(--ink-muted); line-height: 1.7; }
+
+  /* Forms */
   .form-group { margin-bottom: 16px; }
-  .form-label { display: block; font-size: 15px; font-weight: 600; color: var(--warm-brown); margin-bottom: 7px; }
-  .form-input, .form-textarea { width: 100%; padding: 12px 15px; border: 2px solid var(--border-warm); border-radius: var(--radius-sm); font-size: 16px; color: var(--text-dark); background: var(--warm-bg); font-family: inherit; outline: none; }
-  .form-input:focus, .form-textarea:focus { border-color: var(--warm-orange); }
-  .form-textarea { min-height: 100px; resize: vertical; line-height: 1.7; }
-  .btn-primary { padding: 13px 26px; background: var(--warm-orange); color: white; border: none; border-radius: var(--radius-sm); font-size: 16px; font-weight: 600; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 7px; }
-  .btn-primary:hover { background: var(--warm-orange-deep); }
-  .btn-primary:disabled { background: #D4A88A; cursor: wait; }
-  .btn-secondary { padding: 13px 20px; background: var(--warm-cream); color: var(--warm-brown); border: 2px solid var(--border-warm); border-radius: var(--radius-sm); font-size: 16px; font-weight: 600; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 7px; }
-  .photo-upload { border: 3px dashed var(--border-warm); border-radius: var(--radius-lg); padding: 36px 20px; text-align: center; cursor: pointer; background: var(--warm-surface); }
-  .photo-upload:hover { border-color: var(--warm-orange); background: var(--warm-orange-light); }
+  .form-label { display: block; font-size: 15px; font-weight: 600; color: var(--ink-mid); margin-bottom: 7px; letter-spacing: 1px; }
+  .form-input, .form-textarea {
+    width: 100%; padding: 12px 15px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-sm);
+    font-size: 16px; color: var(--ink);
+    background: var(--paper); font-family: inherit; outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus, .form-textarea:focus { border-color: var(--red); }
+  .form-textarea { min-height: 100px; resize: vertical; line-height: 1.8; }
+
+  /* Buttons */
+  .btn-primary {
+    padding: 13px 28px;
+    background: linear-gradient(135deg, var(--red), var(--red-deep));
+    color: white; border: none;
+    border-radius: var(--r-sm);
+    font-size: 16px; font-weight: 600;
+    cursor: pointer; font-family: inherit;
+    display: inline-flex; align-items: center; gap: 7px;
+    box-shadow: 0 3px 10px rgba(192,57,43,0.3);
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 5px 15px rgba(192,57,43,0.4); }
+  .btn-primary:disabled { background: var(--ink-light); cursor: wait; box-shadow: none; transform: none; }
+
+  .btn-secondary {
+    padding: 13px 22px;
+    background: var(--paper);
+    color: var(--ink-mid);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-sm);
+    font-size: 16px; font-weight: 600;
+    cursor: pointer; font-family: inherit;
+    display: inline-flex; align-items: center; gap: 7px;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--red); color: var(--red); background: var(--red-pale); }
+
+  /* Photo */
+  .photo-upload {
+    border: 2px dashed var(--border);
+    border-radius: var(--r-lg);
+    padding: 36px 20px;
+    text-align: center;
+    cursor: pointer;
+    background: var(--paper-dark);
+    transition: all 0.2s;
+  }
+  .photo-upload:hover { border-color: var(--red); background: var(--red-pale); }
+
   .photo-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-top: 14px; }
-  .photo-item { border-radius: var(--radius-md); border: 2px solid var(--border-light); background: var(--warm-cream); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 5px; cursor: pointer; }
-  .photo-item:hover { border-color: var(--warm-orange); }
-  .story-box { background: linear-gradient(135deg,#FDF8F0,#FAF0E6); border: 2px solid var(--warm-gold-light); border-radius: var(--radius-lg); padding: 22px 26px; font-size: 17px; line-height: 1.9; color: var(--text-dark); font-style: italic; position: relative; margin-top: 16px; }
-  .story-box::before { content: '❝'; font-size: 40px; color: var(--warm-gold-light); position: absolute; top: 8px; left: 12px; font-style: normal; line-height: 1; }
-  .story-content { padding-left: 16px; padding-top: 4px; }
+  .photo-item {
+    border-radius: var(--r-md);
+    border: 1px solid var(--border-light);
+    background: var(--paper-dark);
+    aspect-ratio: 1;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 5px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .photo-item:hover { border-color: var(--red); transform: scale(1.02); }
+
+  /* Story box */
+  .story-box {
+    background: linear-gradient(135deg, var(--paper-dark), var(--paper));
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--red);
+    border-radius: var(--r-lg);
+    padding: 24px 28px;
+    font-size: 17px; line-height: 2;
+    color: var(--ink); font-style: italic;
+    position: relative; margin-top: 18px;
+  }
+  .story-box::before {
+    content: '❝';
+    font-size: 40px; color: var(--red-light);
+    position: absolute; top: 8px; left: 14px;
+    font-style: normal; line-height: 1;
+  }
+  .story-content { padding-left: 18px; padding-top: 4px; }
+
+  /* Loading */
   .loading-dots { display: inline-flex; gap: 5px; align-items: center; }
-  .dot { width: 7px; height: 7px; background: var(--warm-orange); border-radius: 50%; animation: bounce 1.2s infinite; }
-  .dot:nth-child(2) { animation-delay: 0.2s; } .dot:nth-child(3) { animation-delay: 0.4s; }
+  .dot { width: 7px; height: 7px; background: var(--red); border-radius: 50%; animation: bounce 1.2s infinite; }
+  .dot:nth-child(2) { animation-delay: 0.2s; }
+  .dot:nth-child(3) { animation-delay: 0.4s; }
   @keyframes bounce { 0%,80%,100%{transform:translateY(0);opacity:0.4} 40%{transform:translateY(-7px);opacity:1} }
-  .tag { display: inline-block; padding: 4px 11px; background: var(--warm-orange-light); color: var(--warm-orange-deep); border-radius: 20px; font-size: 13px; margin: 2px; }
-  .divider { height: 1px; background: var(--border-warm); margin: 18px 0; }
-  .notice { background: var(--warm-gold-light); border-left: 4px solid var(--warm-gold); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 12px 15px; font-size: 14px; color: var(--warm-brown); margin-bottom: 16px; }
+
+  /* Tags */
+  .tag {
+    display: inline-block; padding: 4px 12px;
+    background: var(--red-pale); color: var(--red-deep);
+    border: 1px solid var(--red-light);
+    border-radius: 20px; font-size: 12px; margin: 2px;
+    letter-spacing: 1px;
+  }
+
+  .divider { height: 1px; background: var(--border); margin: 18px 0; }
+
+  .notice {
+    background: var(--gold-light);
+    border-left: 4px solid var(--gold);
+    border-radius: 0 var(--r-sm) var(--r-sm) 0;
+    padding: 12px 15px; font-size: 14px;
+    color: var(--ink-mid); margin-bottom: 16px;
+    letter-spacing: 0.5px;
+  }
+
   .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
   input[type="file"] { display: none; }
   .hidden { display: none !important; }
+
   .chat-messages::-webkit-scrollbar { width: 3px; }
-  .chat-messages::-webkit-scrollbar-thumb { background: var(--border-warm); border-radius: 2px; }
+  .chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 </style>
 </head>
 <body>
@@ -222,6 +576,7 @@
       <div class="btn-row" style="margin-bottom:18px;">
         <button class="btn-primary" onclick="showNewMemory()">✏️ 记录新回忆</button>
         <button class="btn-secondary" onclick="showAIMemory()">🤖 口述给AI整理</button>
+        <button class="btn-secondary" onclick="exportMemories()">📥 导出回忆录</button>
       </div>
       <div id="new-memory-form" class="hidden">
         <div class="notice">💡 填写下方表格，记录您的珍贵回忆，填完后点"保存"就好了！</div>
@@ -334,7 +689,7 @@
 
 <script>
   // ⚠️ 部署后把下面这行的地址换成你的阿里云函数 URL
-  const API_URL = '/.netlify/functions/chat';
+  const API_URL = '/api/chat';
 
   function updateTime() {
     const now = new Date();
@@ -344,6 +699,7 @@
     document.getElementById('currentTime').textContent = `${h}:${m}`;
   }
   updateTime(); setInterval(updateTime, 1000);
+  loadMemories();
 
   function showPage(name) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -420,45 +776,142 @@
     document.getElementById('new-memory-form').classList.add('hidden');
   }
 
-  function saveMemory() {
+  // 加载服务器上的回忆
+  async function loadMemories() {
+    try {
+      const res = await fetch('/api/memories');
+      const memories = await res.json();
+      const list = document.getElementById('memory-list');
+      if (memories.length === 0) return;
+      // 清空示例数据
+      list.innerHTML = '';
+      memories.forEach(m => addMemoryToList(m));
+      document.getElementById('stat-memories').textContent = memories.length;
+    } catch(e) {}
+  }
+
+  function addMemoryToList(m) {
+    const list = document.getElementById('memory-list');
+    const el = document.createElement('div');
+    el.className = 'memory-item';
+    el.dataset.id = m.id;
+    el.innerHTML = `
+      <div class="memory-date">${m.year||'不详'}</div>
+      <div style="flex:1">
+        <div class="memory-title">${m.title}</div>
+        <div class="memory-preview">${m.text||'（无内容）'}</div>
+        <div style="margin-top:7px;display:flex;align-items:center;gap:8px;">
+          <span class="tag">已保存</span>
+          <span style="font-size:12px;color:var(--text-muted)">${m.createdAt||''}</span>
+          <button onclick="deleteMemory('${m.id}',this)" style="margin-left:auto;padding:4px 10px;background:#fee;border:1px solid #fcc;border-radius:6px;font-size:12px;color:#c00;cursor:pointer;">删除</button>
+        </div>
+      </div>`;
+    list.insertBefore(el, list.firstChild);
+  }
+
+  async function deleteMemory(id, btn) {
+    if (!confirm('确定删除这条回忆吗？')) return;
+    await fetch('/api/memories/' + id, { method: 'DELETE' });
+    btn.closest('.memory-item').remove();
+    const n = document.getElementById('stat-memories');
+    n.textContent = Math.max(0, parseInt(n.textContent) - 1);
+  }
+
+  async function exportMemories() {
+    window.open('/api/memories/export', '_blank');
+  }
+
+  async function saveMemory() {
     const title = document.getElementById('memory-title-input').value.trim();
     if (!title) { alert('请先填写回忆标题！'); return; }
     const year = document.getElementById('memory-year-input').value || '不详年份';
     const text = document.getElementById('memory-text-input').value;
-    const list = document.getElementById('memory-list');
-    const el = document.createElement('div'); el.className = 'memory-item';
-    el.innerHTML = `<div class="memory-date">${year}</div><div><div class="memory-title">${title}</div><div class="memory-preview">${text||'（点击查看）'}</div><div style="margin-top:7px;"><span class="tag">新增</span></div></div>`;
-    list.insertBefore(el, list.firstChild);
-    const n = document.getElementById('stat-memories'); n.textContent = parseInt(n.textContent)+1;
-    ['memory-title-input','memory-year-input','memory-text-input'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('new-memory-form').classList.add('hidden');
-    alert('✅ 回忆保存成功！');
+    try {
+      const res = await fetch('/api/memories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, year, text })
+      });
+      const data = await res.json();
+      if (data.success) {
+        addMemoryToList(data.memory);
+        const n = document.getElementById('stat-memories');
+        n.textContent = parseInt(n.textContent) + 1;
+        ['memory-title-input','memory-year-input','memory-text-input'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('new-memory-form').classList.add('hidden');
+        alert('✅ 回忆保存成功！永久保存在服务器上了！');
+      }
+    } catch(e) {
+      alert('保存失败，请重试');
+    }
   }
+
+  let currentPhotoFile = null;
 
   function handlePhotoUpload(e) {
     if (!e.target.files[0]) return;
+    currentPhotoFile = e.target.files[0];
+    // 预览照片
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      let preview = document.getElementById('photo-preview');
+      if (!preview) {
+        preview = document.createElement('img');
+        preview.id = 'photo-preview';
+        preview.style.cssText = 'width:100%;max-height:200px;object-fit:contain;border-radius:12px;margin-top:12px;';
+        document.querySelector('.photo-upload').after(preview);
+      }
+      preview.src = ev.target.result;
+    };
+    reader.readAsDataURL(currentPhotoFile);
     document.getElementById('photo-story-area').classList.remove('hidden');
     document.getElementById('story-result').classList.add('hidden');
   }
 
   async function generateStory() {
+    if (!currentPhotoFile) { alert('请先上传照片！'); return; }
     const year = document.getElementById('photo-year').value;
     const people = document.getElementById('photo-people').value;
     const ctx = document.getElementById('photo-context').value;
-    if (!year && !people && !ctx) { alert('请至少填写一些关于照片的信息！'); return; }
     const btn = document.getElementById('generate-btn');
-    btn.disabled = true; btn.textContent = '✨ 正在生成...';
+    btn.disabled = true; btn.textContent = '✨ AI正在分析照片...';
     try {
-      const story = await callAI(SYS_STORY, [{ role:'user', content:`年份：${year||'不确定'}\n照片中的人：${people||'家人'}\n地点背景：${ctx||'日常生活'}` }]);
-      document.getElementById('story-text').textContent = story;
+      const formData = new FormData();
+      formData.append('photo', currentPhotoFile);
+      formData.append('year', year || '');
+      formData.append('people', people || '');
+      formData.append('context', ctx || '');
+      const res = await fetch('/api/photo-story', { method: 'POST', body: formData });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      document.getElementById('story-text').textContent = data.story;
       document.getElementById('story-result').classList.remove('hidden');
-    } catch(e) { alert('生成失败，请再试一次。'); }
+      // 保存照片URL供后续保存使用
+      document.getElementById('story-result').dataset.photoUrl = data.photoUrl || '';
+    } catch(e) {
+      alert('生成失败：' + e.message);
+    }
     btn.disabled = false; btn.textContent = '✨ 生成回忆故事';
   }
 
-  function saveStory() {
-    const n = document.getElementById('stat-photos'); n.textContent = parseInt(n.textContent)+1;
-    alert('✅ 故事保存成功！');
+  async function saveStory() {
+    const story = document.getElementById('story-text').textContent;
+    const photoUrl = document.getElementById('story-result').dataset.photoUrl || '';
+    const year = document.getElementById('photo-year').value;
+    try {
+      const res = await fetch('/api/memories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: '照片故事', year, text: story, photoUrl })
+      });
+      const data = await res.json();
+      if (data.success) {
+        const n = document.getElementById('stat-photos'); n.textContent = parseInt(n.textContent)+1;
+        alert('✅ 照片故事保存成功！已添加到回忆录。');
+      }
+    } catch(e) {
+      alert('保存失败，请重试');
+    }
   }
 
   function startLesson(id) {
