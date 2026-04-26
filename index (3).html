@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>银发AI助手 - 您的贴心智能伙伴</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --warm-bg: #FDF8F3; --warm-surface: #FAF3EB; --warm-card: #FFFCF8;
+    --warm-orange: #E8845A; --warm-orange-light: #F5D5C3; --warm-orange-deep: #C05A30;
+    --warm-brown: #8B5A3C; --warm-cream: #F7EDE0;
+    --warm-gold: #D4952A; --warm-gold-light: #F5E4C0;
+    --text-dark: #3D2B1A; --text-mid: #6B4830; --text-muted: #9B7A64;
+    --border-warm: #E8D4BE; --border-light: #F0E4D4;
+    --shadow-card: 0 2px 12px rgba(139,90,60,0.08);
+    --radius-lg: 20px; --radius-md: 14px; --radius-sm: 10px;
+  }
+  body { font-family: "PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif; background: var(--warm-bg); color: var(--text-dark); min-height: 100vh; font-size: 17px; line-height: 1.7; }
+  .header { background: var(--warm-card); border-bottom: 2px solid var(--border-warm); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo-icon { width: 46px; height: 46px; background: linear-gradient(135deg,var(--warm-orange),var(--warm-gold)); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+  .logo-text { font-size: 20px; font-weight: 700; color: var(--warm-brown); letter-spacing: 1px; }
+  .logo-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .time-display { font-size: 13px; color: var(--text-muted); text-align: right; }
+  .nav { background: var(--warm-surface); padding: 0 8px; display: flex; border-bottom: 1px solid var(--border-warm); overflow-x: auto; }
+  .nav-btn { padding: 14px 14px; border: none; background: transparent; color: var(--text-muted); font-size: 15px; font-weight: 500; cursor: pointer; border-bottom: 3px solid transparent; display: flex; align-items: center; gap: 5px; font-family: inherit; white-space: nowrap; flex-shrink: 0; }
+  .nav-btn.active { color: var(--warm-orange-deep); border-bottom-color: var(--warm-orange); font-weight: 600; }
+  .main { padding: 18px 14px; max-width: 680px; margin: 0 auto; }
+  .page { display: none; } .page.active { display: block; }
+  .card { background: var(--warm-card); border: 1.5px solid var(--border-warm); border-radius: var(--radius-lg); padding: 20px 18px; margin-bottom: 18px; box-shadow: var(--shadow-card); }
+  .card-title { font-size: 19px; font-weight: 700; color: var(--warm-brown); margin-bottom: 8px; }
+  .card-desc { font-size: 15px; color: var(--text-muted); margin-bottom: 18px; line-height: 1.7; }
+  .hero { background: linear-gradient(135deg,#FDF1E7,#FAE8D4,#F5DEC4); border: 2px solid var(--warm-orange-light); border-radius: var(--radius-lg); padding: 28px 20px; margin-bottom: 18px; text-align: center; }
+  .hero-emoji { font-size: 48px; margin-bottom: 12px; display: block; }
+  .hero-title { font-size: 24px; font-weight: 700; color: var(--warm-brown); margin-bottom: 10px; }
+  .hero-sub { font-size: 16px; color: var(--text-mid); line-height: 1.8; }
+  .feature-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-top: 18px; }
+  .feature-card { background: var(--warm-card); border: 2px solid var(--border-warm); border-radius: var(--radius-lg); padding: 18px 10px; text-align: center; cursor: pointer; transition: all 0.2s; }
+  .feature-card:hover { border-color: var(--warm-orange); transform: translateY(-2px); }
+  .feature-icon { font-size: 34px; margin-bottom: 8px; display: block; }
+  .feature-title { font-size: 15px; font-weight: 700; color: var(--warm-brown); margin-bottom: 5px; }
+  .feature-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+  .stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 18px; }
+  .stat-card { background: var(--warm-card); border: 1.5px solid var(--border-warm); border-radius: var(--radius-md); padding: 14px; text-align: center; }
+  .stat-num { font-size: 26px; font-weight: 700; color: var(--warm-orange); display: block; }
+  .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+  .lesson-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .lesson-card { background: var(--warm-card); border: 2px solid var(--border-light); border-radius: var(--radius-md); padding: 16px; cursor: pointer; transition: all 0.2s; }
+  .lesson-card:hover { border-color: var(--warm-gold); }
+  .lesson-badge { display: inline-flex; align-items: center; background: var(--warm-gold-light); color: var(--warm-brown); font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; margin-bottom: 8px; }
+  .lesson-title { font-size: 15px; font-weight: 600; color: var(--text-dark); margin-bottom: 5px; }
+  .lesson-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+  .lesson-status { margin-top: 10px; display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); }
+  .progress-bar { flex: 1; height: 5px; background: var(--border-warm); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--warm-orange); border-radius: 3px; }
+  .chat-container { background: var(--warm-surface); border: 1.5px solid var(--border-warm); border-radius: var(--radius-lg); overflow: hidden; }
+  .chat-header { background: var(--warm-orange-light); padding: 12px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border-warm); }
+  .ai-avatar { width: 38px; height: 38px; background: var(--warm-orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .ai-name { font-size: 15px; font-weight: 600; color: var(--warm-brown); }
+  .ai-status { font-size: 12px; color: var(--text-muted); }
+  .chat-messages { padding: 16px; min-height: 200px; max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+  .msg { max-width: 82%; padding: 11px 15px; border-radius: 18px; font-size: 16px; line-height: 1.7; }
+  .msg-ai { background: var(--warm-card); border: 1.5px solid var(--border-warm); border-bottom-left-radius: 5px; align-self: flex-start; color: var(--text-dark); }
+  .msg-user { background: var(--warm-orange); color: white; border-bottom-right-radius: 5px; align-self: flex-end; }
+  .chat-input-area { padding: 12px 14px; border-top: 1px solid var(--border-warm); display: flex; gap: 8px; background: var(--warm-card); }
+  .chat-input { flex: 1; padding: 11px 14px; border: 2px solid var(--border-warm); border-radius: var(--radius-sm); font-size: 16px; color: var(--text-dark); background: var(--warm-bg); font-family: inherit; outline: none; }
+  .chat-input:focus { border-color: var(--warm-orange); }
+  .chat-send { padding: 11px 18px; background: var(--warm-orange); color: white; border: none; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; }
+  .chat-send:disabled { background: #D4A88A; cursor: wait; }
+  .quick-qs { padding: 0 16px 12px; display: flex; flex-wrap: wrap; gap: 7px; }
+  .quick-q { padding: 8px 14px; background: var(--warm-cream); border: 1.5px solid var(--border-warm); border-radius: 20px; font-size: 14px; color: var(--warm-brown); cursor: pointer; font-family: inherit; }
+  .quick-q:hover { background: var(--warm-orange-light); border-color: var(--warm-orange); }
+  .memory-list { display: flex; flex-direction: column; gap: 12px; }
+  .memory-item { background: var(--warm-card); border: 1.5px solid var(--border-light); border-radius: var(--radius-md); padding: 16px 18px; display: flex; gap: 14px; cursor: pointer; transition: all 0.2s; }
+  .memory-item:hover { border-color: var(--warm-orange); }
+  .memory-date { background: var(--warm-gold-light); color: var(--warm-brown); font-size: 12px; font-weight: 600; padding: 7px 10px; border-radius: var(--radius-sm); text-align: center; min-width: 60px; flex-shrink: 0; }
+  .memory-title { font-size: 16px; font-weight: 600; color: var(--text-dark); margin-bottom: 4px; }
+  .memory-preview { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+  .form-group { margin-bottom: 16px; }
+  .form-label { display: block; font-size: 15px; font-weight: 600; color: var(--warm-brown); margin-bottom: 7px; }
+  .form-input, .form-textarea { width: 100%; padding: 12px 15px; border: 2px solid var(--border-warm); border-radius: var(--radius-sm); font-size: 16px; color: var(--text-dark); background: var(--warm-bg); font-family: inherit; outline: none; }
+  .form-input:focus, .form-textarea:focus { border-color: var(--warm-orange); }
+  .form-textarea { min-height: 100px; resize: vertical; line-height: 1.7; }
+  .btn-primary { padding: 13px 26px; background: var(--warm-orange); color: white; border: none; border-radius: var(--radius-sm); font-size: 16px; font-weight: 600; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 7px; }
+  .btn-primary:hover { background: var(--warm-orange-deep); }
+  .btn-primary:disabled { background: #D4A88A; cursor: wait; }
+  .btn-secondary { padding: 13px 20px; background: var(--warm-cream); color: var(--warm-brown); border: 2px solid var(--border-warm); border-radius: var(--radius-sm); font-size: 16px; font-weight: 600; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 7px; }
+  .photo-upload { border: 3px dashed var(--border-warm); border-radius: var(--radius-lg); padding: 36px 20px; text-align: center; cursor: pointer; background: var(--warm-surface); }
+  .photo-upload:hover { border-color: var(--warm-orange); background: var(--warm-orange-light); }
+  .photo-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-top: 14px; }
+  .photo-item { border-radius: var(--radius-md); border: 2px solid var(--border-light); background: var(--warm-cream); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 5px; cursor: pointer; }
+  .photo-item:hover { border-color: var(--warm-orange); }
+  .story-box { background: linear-gradient(135deg,#FDF8F0,#FAF0E6); border: 2px solid var(--warm-gold-light); border-radius: var(--radius-lg); padding: 22px 26px; font-size: 17px; line-height: 1.9; color: var(--text-dark); font-style: italic; position: relative; margin-top: 16px; }
+  .story-box::before { content: '❝'; font-size: 40px; color: var(--warm-gold-light); position: absolute; top: 8px; left: 12px; font-style: normal; line-height: 1; }
+  .story-content { padding-left: 16px; padding-top: 4px; }
+  .loading-dots { display: inline-flex; gap: 5px; align-items: center; }
+  .dot { width: 7px; height: 7px; background: var(--warm-orange); border-radius: 50%; animation: bounce 1.2s infinite; }
+  .dot:nth-child(2) { animation-delay: 0.2s; } .dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%,80%,100%{transform:translateY(0);opacity:0.4} 40%{transform:translateY(-7px);opacity:1} }
+  .tag { display: inline-block; padding: 4px 11px; background: var(--warm-orange-light); color: var(--warm-orange-deep); border-radius: 20px; font-size: 13px; margin: 2px; }
+  .divider { height: 1px; background: var(--border-warm); margin: 18px 0; }
+  .notice { background: var(--warm-gold-light); border-left: 4px solid var(--warm-gold); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 12px 15px; font-size: 14px; color: var(--warm-brown); margin-bottom: 16px; }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  input[type="file"] { display: none; }
+  .hidden { display: none !important; }
+  .chat-messages::-webkit-scrollbar { width: 3px; }
+  .chat-messages::-webkit-scrollbar-thumb { background: var(--border-warm); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon">🌸</div>
+    <div>
+      <div class="logo-text">银发AI助手</div>
+      <div class="logo-sub">您的贴心智能伙伴</div>
+    </div>
+  </div>
+  <div class="time-display">
+    <div id="currentDate"></div>
+    <div id="currentTime" style="font-size:17px;font-weight:600;color:var(--warm-brown);"></div>
+  </div>
+</div>
+
+<nav class="nav">
+  <button class="nav-btn active" onclick="showPage('home')">🏠 首页</button>
+  <button class="nav-btn" onclick="showPage('ai-school')">📚 AI学堂</button>
+  <button class="nav-btn" onclick="showPage('memory')">📖 回忆整理</button>
+  <button class="nav-btn" onclick="showPage('photo')">📷 照片故事</button>
+</nav>
+
+<div class="main">
+
+  <!-- 首页 -->
+  <div class="page active" id="page-home">
+    <div class="hero">
+      <span class="hero-emoji">🌻</span>
+      <div class="hero-title">您好，欢迎回来！</div>
+      <div class="hero-sub">这里是您的专属AI助手<br>陪您学习、记录、回忆</div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card"><span class="stat-num" id="stat-lessons">3</span><div class="stat-label">📚 完成课程</div></div>
+      <div class="stat-card"><span class="stat-num" id="stat-memories">3</span><div class="stat-label">📖 珍贵回忆</div></div>
+      <div class="stat-card"><span class="stat-num" id="stat-photos">5</span><div class="stat-label">📷 照片故事</div></div>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card" onclick="showPage('ai-school')"><span class="feature-icon">📚</span><div class="feature-title">AI学堂</div><div class="feature-desc">简单易懂学AI</div></div>
+      <div class="feature-card" onclick="showPage('memory')"><span class="feature-icon">📖</span><div class="feature-title">回忆整理</div><div class="feature-desc">记录人生故事</div></div>
+      <div class="feature-card" onclick="showPage('photo')"><span class="feature-icon">📷</span><div class="feature-title">照片故事</div><div class="feature-desc">老照片变文章</div></div>
+    </div>
+    <div class="divider"></div>
+    <div class="card">
+      <div class="card-title">💬 今日小贴士</div>
+      <div style="font-size:16px;color:var(--text-mid);line-height:1.9;">💡 AI助手可以帮您把口述的故事整理成文字，让珍贵的记忆永远保存下来。</div>
+    </div>
+  </div>
+
+  <!-- AI学堂 -->
+  <div class="page" id="page-ai-school">
+    <div class="card">
+      <div class="card-title">📚 AI学堂</div>
+      <div class="card-desc">专为老年朋友设计，不怕学不会，慢慢来！</div>
+      <div class="lesson-grid">
+        <div class="lesson-card" onclick="startLesson('what-is-ai')">
+          <div class="lesson-badge">⭐ 入门第1课</div>
+          <div class="lesson-title">什么是AI助手？</div>
+          <div class="lesson-desc">了解AI，它能帮我们做什么</div>
+          <div class="lesson-status"><div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div><span>已完成</span></div>
+        </div>
+        <div class="lesson-card" onclick="startLesson('how-to-ask')">
+          <div class="lesson-badge">⭐ 入门第2课</div>
+          <div class="lesson-title">怎么跟AI说话？</div>
+          <div class="lesson-desc">学会简单提问，让AI听懂您</div>
+          <div class="lesson-status"><div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div><span>进行中</span></div>
+        </div>
+        <div class="lesson-card" onclick="startLesson('daily-help')">
+          <div class="lesson-badge">🌟 进阶第1课</div>
+          <div class="lesson-title">AI帮我做日常事务</div>
+          <div class="lesson-desc">查天气、找菜谱、翻译文字</div>
+          <div class="lesson-status"><div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div><span>未开始</span></div>
+        </div>
+        <div class="lesson-card" onclick="startLesson('memory-ai')">
+          <div class="lesson-badge">🌟 进阶第2课</div>
+          <div class="lesson-title">用AI记录人生故事</div>
+          <div class="lesson-desc">把您的故事变成文章留给后人</div>
+          <div class="lesson-status"><div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div><span>未开始</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">🤖 AI学习助手</div>
+      <div class="card-desc">有任何问题，都可以问我！</div>
+      <div class="chat-container">
+        <div class="chat-header">
+          <div class="ai-avatar">🤖</div>
+          <div><div class="ai-name">小智 AI老师</div><div class="ai-status">随时为您解答</div></div>
+        </div>
+        <div class="chat-messages" id="school-messages">
+          <div class="msg msg-ai">您好！我是小智，有任何关于AI的问题请随时问我！</div>
+        </div>
+        <div class="quick-qs">
+          <button class="quick-q" onclick="askQ('school','什么是AI？')">什么是AI？</button>
+          <button class="quick-q" onclick="askQ('school','AI能帮我做什么？')">AI能做什么？</button>
+          <button class="quick-q" onclick="askQ('school','AI安全吗？')">AI安全吗？</button>
+          <button class="quick-q" onclick="askQ('school','不会手机也能用AI吗？')">不会手机也能用？</button>
+        </div>
+        <div class="chat-input-area">
+          <input type="text" class="chat-input" id="school-input" placeholder="请输入您想问的问题..." onkeydown="if(event.key==='Enter')sendMsg('school')">
+          <button class="chat-send" onclick="sendMsg('school')" id="school-send">发送</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 回忆整理 -->
+  <div class="page" id="page-memory">
+    <div class="card">
+      <div class="card-title">📖 我的回忆录</div>
+      <div class="card-desc">把您珍贵的人生故事记录下来。</div>
+      <div class="btn-row" style="margin-bottom:18px;">
+        <button class="btn-primary" onclick="showNewMemory()">✏️ 记录新回忆</button>
+        <button class="btn-secondary" onclick="showAIMemory()">🤖 口述给AI整理</button>
+      </div>
+      <div id="new-memory-form" class="hidden">
+        <div class="notice">💡 填写下方表格，记录您的珍贵回忆，填完后点"保存"就好了！</div>
+        <div class="form-group">
+          <label class="form-label">📌 这段回忆的标题</label>
+          <input type="text" class="form-input" id="memory-title-input" placeholder="比如：第一次去北京">
+        </div>
+        <div class="form-group">
+          <label class="form-label">📅 大约是什么时候？</label>
+          <input type="text" class="form-input" id="memory-year-input" placeholder="比如：1978年夏天">
+        </div>
+        <div class="form-group">
+          <label class="form-label">✍️ 写下这段回忆</label>
+          <textarea class="form-textarea" id="memory-text-input" placeholder="把您记得的细节都写下来..."></textarea>
+        </div>
+        <div class="btn-row">
+          <button class="btn-primary" onclick="saveMemory()">💾 保存回忆</button>
+          <button class="btn-secondary" onclick="document.getElementById('new-memory-form').classList.add('hidden')">取消</button>
+        </div>
+      </div>
+      <div id="ai-memory-form" class="hidden">
+        <div class="chat-container">
+          <div class="chat-header">
+            <div class="ai-avatar">🌸</div>
+            <div><div class="ai-name">回忆整理助手</div><div class="ai-status">帮您把故事记录下来</div></div>
+          </div>
+          <div class="chat-messages" id="memory-messages">
+            <div class="msg msg-ai">您好！请慢慢跟我说，您想记录哪段回忆？我来帮您整理成文字！</div>
+          </div>
+          <div class="chat-input-area">
+            <input type="text" class="chat-input" id="memory-input" placeholder="跟我说说您的故事..." onkeydown="if(event.key==='Enter')sendMsg('memory')">
+            <button class="chat-send" onclick="sendMsg('memory')" id="memory-send">发送</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">🗂️ 已保存的回忆</div>
+      <div class="memory-list" id="memory-list">
+        <div class="memory-item">
+          <div class="memory-date">1978<br>夏天</div>
+          <div><div class="memory-title">第一次去北京</div><div class="memory-preview">那年夏天，我第一次坐火车去北京……</div><div style="margin-top:7px;"><span class="tag">旅行</span><span class="tag">青年时代</span></div></div>
+        </div>
+        <div class="memory-item">
+          <div class="memory-date">1985<br>春节</div>
+          <div><div class="memory-title">孩子出生那天</div><div class="memory-preview">大雪纷飞的冬天，孩子呱呱坠地……</div><div style="margin-top:7px;"><span class="tag">家庭</span></div></div>
+        </div>
+        <div class="memory-item">
+          <div class="memory-date">1992<br>秋天</div>
+          <div><div class="memory-title">老家的那棵大树</div><div class="memory-preview">老家院子里有棵柿子树，每年秋天摘柿子……</div><div style="margin-top:7px;"><span class="tag">故乡</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 照片故事 -->
+  <div class="page" id="page-photo">
+    <div class="card">
+      <div class="card-title">📷 照片故事</div>
+      <div class="card-desc">上传一张老照片，AI帮您写出温暖的回忆故事。</div>
+      <div class="photo-upload" onclick="document.getElementById('photo-file').click()">
+        <span style="font-size:46px;display:block;margin-bottom:12px;">📸</span>
+        <div style="font-size:18px;font-weight:600;color:var(--warm-brown);margin-bottom:6px;">点击上传您的照片</div>
+        <div style="font-size:14px;color:var(--text-muted);">从手机相册选择照片</div>
+      </div>
+      <input type="file" id="photo-file" accept="image/*" onchange="handlePhotoUpload(event)">
+      <div id="photo-story-area" class="hidden">
+        <div style="margin-top:18px;">
+          <div style="font-size:16px;font-weight:600;color:var(--warm-brown);margin-bottom:12px;">📝 告诉我一些关于这张照片的事：</div>
+          <div class="form-group">
+            <label class="form-label">这张照片大约是哪年拍的？</label>
+            <input type="text" class="form-input" id="photo-year" placeholder="比如：1975年">
+          </div>
+          <div class="form-group">
+            <label class="form-label">照片里有哪些人？</label>
+            <input type="text" class="form-input" id="photo-people" placeholder="比如：我和老伴">
+          </div>
+          <div class="form-group">
+            <label class="form-label">在哪里拍的？当时在做什么？</label>
+            <input type="text" class="form-input" id="photo-context" placeholder="比如：老家、节日庆典">
+          </div>
+          <button class="btn-primary" onclick="generateStory()" id="generate-btn">✨ 生成回忆故事</button>
+        </div>
+        <div id="story-result" class="hidden">
+          <div class="story-box"><div class="story-content" id="story-text"></div></div>
+          <div class="btn-row" style="margin-top:12px;">
+            <button class="btn-primary" onclick="saveStory()">💾 保存故事</button>
+            <button class="btn-secondary" onclick="generateStory()">🔄 重新生成</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">🖼️ 我的照片故事集</div>
+      <div class="photo-grid">
+        <div class="photo-item"><span style="font-size:32px;">👨‍👩‍👧‍👦</span><div style="font-size:11px;color:var(--text-muted);text-align:center;">全家福<br>1980年</div></div>
+        <div class="photo-item"><span style="font-size:32px;">🏔️</span><div style="font-size:11px;color:var(--text-muted);text-align:center;">泰山之旅<br>1983年</div></div>
+        <div class="photo-item"><span style="font-size:32px;">🎓</span><div style="font-size:11px;color:var(--text-muted);text-align:center;">毕业典礼<br>2005年</div></div>
+        <div class="photo-item"><span style="font-size:32px;">🌸</span><div style="font-size:11px;color:var(--text-muted);text-align:center;">公园赏花<br>2010年</div></div>
+        <div class="photo-item"><span style="font-size:32px;">🏡</span><div style="font-size:11px;color:var(--text-muted);text-align:center;">老家院子<br>1972年</div></div>
+        <div class="photo-item" style="border-style:dashed;" onclick="document.getElementById('photo-file').click()">
+          <span style="font-size:26px;color:var(--text-muted);">＋</span>
+          <div style="font-size:11px;color:var(--text-muted);text-align:center;">添加更多</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ⚠️ 部署后把下面这行的地址换成你的阿里云函数 URL
+  const API_URL = '/.netlify/functions/chat';
+
+  function updateTime() {
+    const now = new Date();
+    const days = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+    document.getElementById('currentDate').textContent = `${now.getMonth()+1}月${now.getDate()}日 ${days[now.getDay()]}`;
+    const h = String(now.getHours()).padStart(2,'0'), m = String(now.getMinutes()).padStart(2,'0');
+    document.getElementById('currentTime').textContent = `${h}:${m}`;
+  }
+  updateTime(); setInterval(updateTime, 1000);
+
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-'+name).classList.add('active');
+    ['home','ai-school','memory','photo'].forEach((p,i) => {
+      if (p === name) document.querySelectorAll('.nav-btn')[i].classList.add('active');
+    });
+  }
+
+  const SYS_SCHOOL = `你是"小智"，专为老年人服务的AI学习助手。用非常简单亲切的中文回答，不用专业术语，多打比方，语气温暖耐心，每次不超过150字。`;
+  const SYS_MEMORY = `你是温暖的"回忆整理助手"，帮助老年人记录人生故事。引导老人说出更多细节，语气温暖耐心，每次不超过120字。老人说完整故事后帮整理成优美文字。`;
+  const SYS_STORY  = `你是擅长写回忆文章的AI。根据照片信息写一段温暖感人的回忆故事，文字优美有画面感，200-300字，用第一人称，体现时代背景，结尾温暖有余韵。`;
+
+  const hist = { school: [], memory: [] };
+
+  async function callAI(sys, messages) {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ system: sys, messages })
+    });
+    if (!res.ok) throw new Error('error');
+    const d = await res.json();
+    if (d.error) throw new Error(d.error);
+    return d.text;
+  }
+
+  function addMsg(cid, text, isUser) {
+    const c = document.getElementById(cid);
+    const d = document.createElement('div');
+    d.className = 'msg ' + (isUser ? 'msg-user' : 'msg-ai');
+    d.textContent = text;
+    c.appendChild(d); c.scrollTop = c.scrollHeight;
+  }
+
+  function showLoad(cid) {
+    const c = document.getElementById(cid);
+    const d = document.createElement('div');
+    d.className = 'msg msg-ai'; d.id = 'ld-'+cid;
+    d.innerHTML = '<div class="loading-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
+    c.appendChild(d); c.scrollTop = c.scrollHeight;
+  }
+
+  function rmLoad(cid) { const e = document.getElementById('ld-'+cid); if(e) e.remove(); }
+
+  async function sendMsg(type) {
+    const inp = document.getElementById(type+'-input');
+    const txt = inp.value.trim(); if (!txt) return;
+    inp.value = '';
+    const btn = document.getElementById(type+'-send'); btn.disabled = true;
+    addMsg(type+'-messages', txt, true);
+    showLoad(type+'-messages');
+    const sys = type === 'school' ? SYS_SCHOOL : SYS_MEMORY;
+    hist[type].push({ role:'user', content:txt });
+    try {
+      const reply = await callAI(sys, hist[type]);
+      hist[type].push({ role:'assistant', content:reply });
+      rmLoad(type+'-messages'); addMsg(type+'-messages', reply, false);
+    } catch(e) {
+      rmLoad(type+'-messages'); addMsg(type+'-messages', '抱歉，网络出了点问题，请稍后再试。', false);
+    }
+    btn.disabled = false;
+  }
+
+  function askQ(type, q) { document.getElementById(type+'-input').value = q; sendMsg(type); }
+
+  function showNewMemory() {
+    document.getElementById('new-memory-form').classList.remove('hidden');
+    document.getElementById('ai-memory-form').classList.add('hidden');
+  }
+  function showAIMemory() {
+    document.getElementById('ai-memory-form').classList.remove('hidden');
+    document.getElementById('new-memory-form').classList.add('hidden');
+  }
+
+  function saveMemory() {
+    const title = document.getElementById('memory-title-input').value.trim();
+    if (!title) { alert('请先填写回忆标题！'); return; }
+    const year = document.getElementById('memory-year-input').value || '不详年份';
+    const text = document.getElementById('memory-text-input').value;
+    const list = document.getElementById('memory-list');
+    const el = document.createElement('div'); el.className = 'memory-item';
+    el.innerHTML = `<div class="memory-date">${year}</div><div><div class="memory-title">${title}</div><div class="memory-preview">${text||'（点击查看）'}</div><div style="margin-top:7px;"><span class="tag">新增</span></div></div>`;
+    list.insertBefore(el, list.firstChild);
+    const n = document.getElementById('stat-memories'); n.textContent = parseInt(n.textContent)+1;
+    ['memory-title-input','memory-year-input','memory-text-input'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('new-memory-form').classList.add('hidden');
+    alert('✅ 回忆保存成功！');
+  }
+
+  function handlePhotoUpload(e) {
+    if (!e.target.files[0]) return;
+    document.getElementById('photo-story-area').classList.remove('hidden');
+    document.getElementById('story-result').classList.add('hidden');
+  }
+
+  async function generateStory() {
+    const year = document.getElementById('photo-year').value;
+    const people = document.getElementById('photo-people').value;
+    const ctx = document.getElementById('photo-context').value;
+    if (!year && !people && !ctx) { alert('请至少填写一些关于照片的信息！'); return; }
+    const btn = document.getElementById('generate-btn');
+    btn.disabled = true; btn.textContent = '✨ 正在生成...';
+    try {
+      const story = await callAI(SYS_STORY, [{ role:'user', content:`年份：${year||'不确定'}\n照片中的人：${people||'家人'}\n地点背景：${ctx||'日常生活'}` }]);
+      document.getElementById('story-text').textContent = story;
+      document.getElementById('story-result').classList.remove('hidden');
+    } catch(e) { alert('生成失败，请再试一次。'); }
+    btn.disabled = false; btn.textContent = '✨ 生成回忆故事';
+  }
+
+  function saveStory() {
+    const n = document.getElementById('stat-photos'); n.textContent = parseInt(n.textContent)+1;
+    alert('✅ 故事保存成功！');
+  }
+
+  function startLesson(id) {
+    const t = {'what-is-ai':'什么是AI助手？','how-to-ask':'怎么跟AI说话？','daily-help':'AI帮我做日常事务','memory-ai':'用AI记录人生故事'};
+    showPage('ai-school');
+    setTimeout(() => { document.getElementById('school-input').value = `请教我"${t[id]}"这堂课`; sendMsg('school'); }, 300);
+  }
+</script>
+</body>
+</html>
